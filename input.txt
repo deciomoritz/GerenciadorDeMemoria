@@ -1,0 +1,4 @@
+//NomeDoProcesso TempoDeChegada Duração Tamanho(Kb)
+P1 0 10 100
+P2 2 5 70
+P3 10 40 1000
