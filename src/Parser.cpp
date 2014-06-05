@@ -55,12 +55,12 @@ int Parser::parse() {
 		unsigned duracao = atoi(token[2]);
 		unsigned tamanho = atoi(token[3]);
 
-		processosCriados.push(Processo(nome, tChegada, duracao, tamanho));
+		processosLidos.push_back(Processo(nome, tChegada, duracao, tamanho));
 
 	}
 	return 1;
 }
 
-queue<Processo>* Parser::processos() {
-	return &processosCriados;
+list<Processo>* Parser::processos() {
+	return &processosLidos;
 }

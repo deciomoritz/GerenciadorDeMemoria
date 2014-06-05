@@ -17,10 +17,10 @@ using std::ifstream;
 
 #include <cstring>
 
-#include <queue>
-using std::queue;
-
 #include "Processo.h"
+
+#include <list>
+using std::list;
 
 const int MAX_CHARS_PER_LINE = 512;
 const int MAX_TOKENS_PER_LINE = 20;
@@ -28,7 +28,7 @@ const char* const DELIMITER = " ";
 
 class Parser {
 
-	queue<Processo> processosCriados;
+	list<Processo> processosLidos;
 
 public:
 	Parser();
@@ -36,7 +36,7 @@ public:
 
 	int parse();
 
-	queue<Processo> * processos();
+	list<Processo> * processos();
 };
 
 #endif /* PARSER_H_ */
