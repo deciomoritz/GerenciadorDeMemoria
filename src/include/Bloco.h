@@ -31,12 +31,12 @@ public:
 		return tamanho;
 	}
 
-	bool operator <(const Bloco &b) const {
-		return tamanho < b.tamanho;
+	bool operator >=(const Bloco &b) const {
+		return tamanho >= b.tamanho;
 	}
 
-	bool operator >(const Processo &p) const {
-		return tamanho > p.getTamanho();
+	bool operator >=(const Processo &p) const {
+		return tamanho >= p.getTamanho();
 	}
 };
 

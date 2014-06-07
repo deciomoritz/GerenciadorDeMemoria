@@ -13,6 +13,15 @@
 #include <list>
 using std::list;
 
+#include <ostream>
+using std::ostream;
+
+#include <math.h>
+
+#include <iostream>
+using std::cout;
+using std::endl;
+
 typedef list<Bloco> blocos;
 class GerenciadorDeMemoria {
 
@@ -20,13 +29,23 @@ class GerenciadorDeMemoria {
 	list<Bloco> memoria;
 	list<Processo> criados;
 
+	void dividir(unsigned tamanhoDisponivel, unsigned tamanhoDesejado); //passar log2 dos parametros
+
+	friend ostream & operator<<(ostream & out, const blocos & memoria) {
+		for (blocos::const_iterator bloco = memoria.begin(); bloco != memoria.end(); bloco++) {
+			out << "Tamanho: " << bloco->getTamanho();
+			out << " Tamanho log2: " << log2(bloco->getTamanho()) << endl;
+		}
+		return out;
+	}
+
 public:
 	void carregar(Processo p);
 
 	GerenciadorDeMemoria();
 	virtual ~GerenciadorDeMemoria();
 
-	string toString();
+	void printMemoria();
 };
 
 #endif /* GERENCIADORDEMEMORIA_H_ */
