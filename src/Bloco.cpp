@@ -15,6 +15,13 @@ Bloco::Bloco() {
 Bloco::Bloco(unsigned tam) {
 	tamanho = tam;
 	livre = true;
+	processo = 0;
+}
+
+Bloco::Bloco(unsigned tam, Processo * p) {
+	tamanho = tam;
+	livre = true;
+	processo = p;
 }
 
 Bloco::~Bloco() {
@@ -26,4 +33,8 @@ void Bloco::liberar() {
 
 void Bloco::alocar() {
 	livre = false;
+}
+
+void Bloco::associar(Processo * p) {
+	processo = p;
 }

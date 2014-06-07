@@ -6,7 +6,6 @@
  */
 
 #include "include/Parser.h"
-#include <stdlib.h>
 
 Parser::Parser() {
 }

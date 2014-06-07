@@ -12,7 +12,7 @@ int main() {
 	GerenciadorDeMemoria g;
 
 	for (list<Processo>::iterator processo = p.processos()->begin(); processo != p.processos()->end(); processo++) {
-		g.carregar(*processo);
+		g.alocar(&*processo);
 	}
 
 	g.printMemoria();

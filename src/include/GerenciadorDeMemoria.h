@@ -13,6 +13,8 @@
 #include <list>
 using std::list;
 
+#include <stdlib.h>
+
 #include <ostream>
 using std::ostream;
 
@@ -29,7 +31,7 @@ class GerenciadorDeMemoria {
 	list<Bloco> memoria;
 	list<Processo> criados;
 
-	void dividir(unsigned tamanhoDisponivel, unsigned tamanhoDesejado); //passar log2 dos parametros
+	void dividir(unsigned tamanhoDisponivel, unsigned tamanhoDesejado, Processo * p); //passar log2 dos parametros
 
 	friend ostream & operator<<(ostream & out, const blocos & memoria) {
 		for (blocos::const_iterator bloco = memoria.begin(); bloco != memoria.end(); bloco++) {
@@ -40,7 +42,8 @@ class GerenciadorDeMemoria {
 	}
 
 public:
-	void carregar(Processo p);
+	void alocar(Processo * p);
+	void desalocar(Processo p);
 
 	GerenciadorDeMemoria();
 	virtual ~GerenciadorDeMemoria();

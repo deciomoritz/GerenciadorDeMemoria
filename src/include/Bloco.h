@@ -14,14 +14,21 @@ class Bloco {
 
 	unsigned tamanho;
 	bool livre;
+	Processo * processo;
 
 public:
+	Bloco(unsigned tam, Processo * p);
 	Bloco(unsigned tam);
 	Bloco();
 	virtual ~Bloco();
 
 	void liberar();
 	void alocar();
+	void associar(Processo * p);
+
+	Processo * getProcesso(){
+		return processo;
+	}
 
 	bool isLivre() const {
 		return livre;
