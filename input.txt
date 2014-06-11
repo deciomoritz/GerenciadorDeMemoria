@@ -1,6 +1,8 @@
+//Tamanho da memória
+2048
 //NomeDoProcesso TempoDeChegada Duração Tamanho(Kb)
 P1 0 10 100
-P2 2 5 70
-P3 10 40 1000
-P4 10 40 50
-P5 10 40 10
+P2 5 6 70
+P3 4 5 1000
+P4 10 20 50
+P5 7 9 10

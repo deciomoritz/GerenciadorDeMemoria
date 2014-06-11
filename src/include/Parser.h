@@ -31,12 +31,14 @@ const char* const DELIMITER = " ";
 class Parser {
 
 	list<Processo> processosLidos;
+	unsigned tamanhoMemoria;
 
 public:
 	Parser();
 	virtual ~Parser();
 
 	int parse();
+	unsigned tamanhoDaMemoria();
 
 	list<Processo> * processos();
 };

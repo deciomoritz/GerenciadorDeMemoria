@@ -38,6 +38,14 @@ public:
 	const string& getNome() const {
 		return nome;
 	}
+
+	bool operator ==(const Processo &p) const {
+		return nome == p.nome;
+	}
+
+	bool operator <(const Processo &p) const {
+		return tempoDeChegada < p.tempoDeChegada;
+	}
 };
 
 #endif /* PROCESSO_H_ */

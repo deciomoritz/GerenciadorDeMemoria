@@ -7,8 +7,8 @@
 
 #include "include/GerenciadorDeMemoria.h"
 
-GerenciadorDeMemoria::GerenciadorDeMemoria() {
-	tamanhoDaMemoria = pow(2, 11);
+GerenciadorDeMemoria::GerenciadorDeMemoria(unsigned tamMemoria) {
+	tamanhoDaMemoria = tamMemoria;
 	memoria.push_back(Bloco(tamanhoDaMemoria));
 }
 
@@ -16,7 +16,6 @@ GerenciadorDeMemoria::~GerenciadorDeMemoria() {
 }
 
 void GerenciadorDeMemoria::alocar(Processo * p) {
-
 	Bloco menorBlocoSuficiente(tamanhoDaMemoria);
 	blocos::iterator candidato;
 
@@ -30,13 +29,15 @@ void GerenciadorDeMemoria::alocar(Processo * p) {
 	unsigned iNecessario = log2(p->getTamanho()) + 1;
 	unsigned iDisponivel = log2(menorBlocoSuficiente.getTamanho());
 
-	if (iDisponivel == iNecessario){
+	if (iDisponivel == iNecessario) {
 		candidato->associar(p);
 		candidato->alocar();
-	}else {
+	} else {
 		memoria.erase(candidato);
 		dividir(iDisponivel, iNecessario, p);
 	}
+	memoria.sort();
+	memoria.reverse();
 }
 
 void GerenciadorDeMemoria::dividir(unsigned tamanhoDisponivel, unsigned tamanhoDesejado, Processo * p) {
@@ -53,31 +54,58 @@ void GerenciadorDeMemoria::dividir(unsigned tamanhoDisponivel, unsigned tamanhoD
 	}
 }
 
-void GerenciadorDeMemoria::desalocar(Processo p) {
+void GerenciadorDeMemoria::desalocar(Processo * p) {
 
 	blocos::iterator candidato;
 
 	blocos::iterator processo;
 	for (blocos::iterator bloco = memoria.begin(); bloco != memoria.end(); bloco++) {
-		if(bloco->getTamanho() == p.getTamanho() && bloco->isLivre())
-			candidato = bloco;
-		if(bloco->getTamanho() == atoi(p.getNome().c_str()))
-			processo = bloco;
+		if (!bloco->isLivre())
+			if (bloco->getProcesso()->getNome() == p->getNome())
+				processo = bloco;
 	}
-
-	if(!candidato->getTamanho()){
-		memoria.erase(candidato);
-
-	}
-
+	processo->liberar();
+	reagrupar();
+	memoria.sort();
+	memoria.reverse();
 }
 
 void GerenciadorDeMemoria::printMemoria() {
+
+	unsigned fragmentacaoInternaTotal = 0;
 	for (blocos::iterator bloco = memoria.begin(); bloco != memoria.end(); bloco++) {
-		cout << "Tamanho: " << bloco->getTamanho();
-		cout << " Tamanho log2: " << log2(bloco->getTamanho());
-		if(!bloco->isLivre())
+		cout << "Tamanho da partição: " << bloco->getTamanho() << " kb";
+		if (!bloco->isLivre()){
 			cout << " Processo: " << bloco->getProcesso()->getNome();
-		cout << " livre: " << bloco->isLivre() << endl;
+			cout << " Tamanho do processo: " << bloco->getProcesso()->getTamanho() << " kb";
+			cout << " Fragmentação interna: " << bloco->getTamanho() - bloco->getProcesso()->getTamanho() << " kb";
+			fragmentacaoInternaTotal += bloco->getTamanho() - bloco->getProcesso()->getTamanho();
+		}
+		cout << (bloco->isLivre() ? " Livre" : "") << endl;
 	}
+	cout << "\nFragmentação interna total: " << fragmentacaoInternaTotal << " kb\n";
+}
+
+void GerenciadorDeMemoria::reagrupar() {
+	blocos::iterator primeiroLivre;
+	for (blocos::iterator bloco = memoria.begin(); bloco != memoria.end(); bloco++) {
+		if (bloco->isLivre())
+			primeiroLivre = bloco;
+		else
+			continue;
+		unsigned tamanhoBlocoLiberado = primeiroLivre->getTamanho() * 2;
+		for (blocos::iterator bloco = memoria.begin(); bloco != memoria.end(); bloco++) {
+			if (bloco->isLivre() && bloco->getTamanho() == primeiroLivre->getTamanho() && primeiroLivre != bloco) {
+				memoria.erase(primeiroLivre);
+				memoria.erase(bloco);
+				memoria.push_back(Bloco(tamanhoBlocoLiberado));
+				reagrupar();
+				return;
+			}
+		}
+	}
+}
+
+GerenciadorDeMemoria::GerenciadorDeMemoria() {
+	tamanhoDaMemoria = 0;
 }

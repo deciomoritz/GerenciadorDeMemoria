@@ -33,22 +33,43 @@ class GerenciadorDeMemoria {
 
 	void dividir(unsigned tamanhoDisponivel, unsigned tamanhoDesejado, Processo * p); //passar log2 dos parametros
 
-	friend ostream & operator<<(ostream & out, const blocos & memoria) {
-		for (blocos::const_iterator bloco = memoria.begin(); bloco != memoria.end(); bloco++) {
-			out << "Tamanho: " << bloco->getTamanho();
-			out << " Tamanho log2: " << log2(bloco->getTamanho()) << endl;
-		}
-		return out;
-	}
-
 public:
 	void alocar(Processo * p);
-	void desalocar(Processo p);
+	void desalocar(Processo * p);
+	void reagrupar();
 
 	GerenciadorDeMemoria();
+	GerenciadorDeMemoria(unsigned tamMemoria);
 	virtual ~GerenciadorDeMemoria();
 
-	void printMemoria();
+	void printMemoria(); //debug
+
+	friend ostream& operator<<(ostream & out, const GerenciadorDeMemoria g) {
+		unsigned fragmentacaoInternaTotal = 0;
+
+		double memoriaOcupada = 0;
+		double memoriaEfetivamenteUsada = 0;
+
+		for (blocos::const_iterator bloco = g.memoria.begin(); bloco != g.memoria.end(); bloco++) {
+			out << "Tamanho da partição: " << bloco->getTamanho() << " kb";
+			if (!bloco->isLivre()) {
+				out << " Processo: " << bloco->getProcesso()->getNome();
+				memoriaOcupada += bloco->getTamanho();
+				out << " Tamanho do processo: " << bloco->getProcesso()->getTamanho() << " kb";
+				memoriaEfetivamenteUsada += bloco->getProcesso()->getTamanho();
+				out << " Fragmentação interna: " << bloco->getTamanho() - bloco->getProcesso()->getTamanho() << " kb";
+				fragmentacaoInternaTotal += bloco->getTamanho() - bloco->getProcesso()->getTamanho();
+			}
+			out << (bloco->isLivre() ? " Livre" : "") << endl;
+		}
+		out << "\nFragmentação interna total: " << fragmentacaoInternaTotal << " kb\n";
+
+		if(memoriaOcupada != 0)
+			out << "\nTaxa de desperdício da memória: " << (memoriaOcupada - memoriaEfetivamenteUsada)/memoriaOcupada*100 << " %\n";
+		else
+			out << "\nTaxa de desperdício da memória: 0 %\n";
+		return out;
+	}
 };
 
 #endif /* GERENCIADORDEMEMORIA_H_ */

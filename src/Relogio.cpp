@@ -1,6 +1,7 @@
 #include "include/Relogio.h"
 
 Relogio::Relogio() {
+	tempoAtual = 0;
 }
 
 void Relogio::iniciar() {

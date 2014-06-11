@@ -26,7 +26,7 @@ public:
 	void alocar();
 	void associar(Processo * p);
 
-	Processo * getProcesso(){
+	Processo * getProcesso() {
 		return processo;
 	}
 
@@ -42,9 +42,18 @@ public:
 		return tamanho >= b.tamanho;
 	}
 
+	bool operator <(const Bloco &b) const {
+		return tamanho < b.tamanho;
+	}
+
 	bool operator >=(const Processo &p) const {
 		return tamanho >= p.getTamanho();
 	}
+
+	bool operator !=(const Bloco &b) const {
+		return tamanho >= b.tamanho && livre != b.livre;
+	}
+
 };
 
 #endif /* BLOCO_H_ */

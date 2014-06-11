@@ -17,10 +17,15 @@ int Parser::parse() {
 	// create a file-reading object
 	ifstream fin;
 	fin.open("input.txt"); // open a file
-	if (!fin.good())
+	if (!fin.good()){
+		cout << "Erro ao ler arquivo\n";
 		return 1; // exit if file not found
+	}
 
 	char buf[MAX_CHARS_PER_LINE];
+	fin.getline(buf, MAX_CHARS_PER_LINE); //remove comment line
+	fin.getline(buf, MAX_CHARS_PER_LINE);
+	tamanhoMemoria = atoi(buf);
 	fin.getline(buf, MAX_CHARS_PER_LINE); //remove comment line
 	// read each line of the file
 	while (!fin.eof()) {
@@ -55,9 +60,14 @@ int Parser::parse() {
 		unsigned tamanho = atoi(token[3]);
 
 		processosLidos.push_back(Processo(nome, tChegada, duracao, tamanho));
-
 	}
+	processosLidos.sort();
+	processosLidos.unique();
 	return 1;
+}
+
+unsigned Parser::tamanhoDaMemoria() {
+	return tamanhoMemoria;
 }
 
 list<Processo>* Parser::processos() {

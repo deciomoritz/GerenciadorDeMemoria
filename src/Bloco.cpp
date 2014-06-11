@@ -10,6 +10,7 @@
 Bloco::Bloco() {
 	tamanho = 0;
 	livre = true;
+	processo = 0;
 }
 
 Bloco::Bloco(unsigned tam) {
