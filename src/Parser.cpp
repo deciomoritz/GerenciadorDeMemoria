@@ -16,7 +16,7 @@ Parser::~Parser() {
 int Parser::parse() {
 	// create a file-reading object
 	ifstream fin;
-	fin.open("input.txt"); // open a file
+	fin.open("../input.txt"); // open a file
 	if (!fin.good()){
 		cout << "Erro ao ler arquivo\n";
 		return 1; // exit if file not found

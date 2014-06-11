@@ -17,11 +17,24 @@ class Processo {
 	unsigned tempoDeChegada;
 	unsigned duracao;
 	unsigned tamanho; //Kb
+	bool alocado;
 
 public:
 	Processo();
 	Processo(string n, unsigned tc, unsigned dur, unsigned tam);
 	virtual ~Processo();
+
+	bool isAlocado(){
+		return alocado;
+	}
+
+	void alocar(){
+		alocado = true;
+	}
+
+	void desalocar(){
+		alocado = false;
+	}
 
 	unsigned getDuracao() const {
 		return duracao;

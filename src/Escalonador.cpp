@@ -23,7 +23,8 @@ typedef list<Processo>::iterator iterador;
 void Escalonador::simular() {
 
 	std::ofstream outputFile;
-	outputFile.open("output.txt");
+	outputFile.open("../output.txt");
+	cout << "Saída gerada no arquivo output.txt\n";
 
 	r.iniciar();
 
@@ -35,14 +36,19 @@ void Escalonador::simular() {
 		for (iterador processo = p->processos()->begin(); processo != p->processos()->end(); processo++) {
 			unsigned tempoSaida = processo->getTempoDeChegada() + processo->getDuracao();
 			if (processo->getTempoDeChegada() == r.getTempoAtual()) {
-				outputFile << "<Alocando processo " << processo->getNome() << ">" << endl;
-				g.alocar(&*processo);
+				outputFile << "<Alocando processo " << processo->getNome() << ">(" << processo->getTamanho() << "kb)" << endl;
+				bool ok = g.alocar(&*processo);
+				if (!ok)
+					outputFile << "Memória insuficiente!\n";
 				print = true;
 			} else if (tempoSaida == r.getTempoAtual()) {
-				outputFile << "<Desalocando processo " << processo->getNome() << ">" << endl;
-				g.desalocar(&*processo);
-				processosDesalocados++;
-				print = true;
+
+				if (processo->isAlocado()) {
+					outputFile << "<Desalocando processo " << processo->getNome() << ">" << endl;
+					g.desalocar(&*processo);
+					print = true;
+				}
+					processosDesalocados++;
 			}
 		}
 

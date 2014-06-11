@@ -15,16 +15,24 @@ GerenciadorDeMemoria::GerenciadorDeMemoria(unsigned tamMemoria) {
 GerenciadorDeMemoria::~GerenciadorDeMemoria() {
 }
 
-void GerenciadorDeMemoria::alocar(Processo * p) {
+bool GerenciadorDeMemoria::alocar(Processo * p) {
 	Bloco menorBlocoSuficiente(tamanhoDaMemoria);
 	blocos::iterator candidato;
+
+	bool memoriaSuficiente = false;
 
 	for (blocos::iterator bloco = memoria.begin(); bloco != memoria.end(); bloco++) {
 		if (menorBlocoSuficiente >= *bloco && *bloco >= *p && bloco->isLivre()) {
 			menorBlocoSuficiente = *bloco;
 			candidato = bloco;
+			memoriaSuficiente = true;
 		}
 	}
+
+	if(!memoriaSuficiente)
+		return false;
+
+	p->alocar();
 
 	unsigned iNecessario = log2(p->getTamanho()) + 1;
 	unsigned iDisponivel = log2(menorBlocoSuficiente.getTamanho());
@@ -38,6 +46,7 @@ void GerenciadorDeMemoria::alocar(Processo * p) {
 	}
 	memoria.sort();
 	memoria.reverse();
+	return true;
 }
 
 void GerenciadorDeMemoria::dividir(unsigned tamanhoDisponivel, unsigned tamanhoDesejado, Processo * p) {
@@ -56,14 +65,19 @@ void GerenciadorDeMemoria::dividir(unsigned tamanhoDisponivel, unsigned tamanhoD
 
 void GerenciadorDeMemoria::desalocar(Processo * p) {
 
-	blocos::iterator candidato;
-
 	blocos::iterator processo;
+
 	for (blocos::iterator bloco = memoria.begin(); bloco != memoria.end(); bloco++) {
 		if (!bloco->isLivre())
 			if (bloco->getProcesso()->getNome() == p->getNome())
 				processo = bloco;
 	}
+
+	if(!processo._M_node)
+		return;
+
+	p->desalocar();
+
 	processo->liberar();
 	reagrupar();
 	memoria.sort();

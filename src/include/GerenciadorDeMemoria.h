@@ -34,7 +34,7 @@ class GerenciadorDeMemoria {
 	void dividir(unsigned tamanhoDisponivel, unsigned tamanhoDesejado, Processo * p); //passar log2 dos parametros
 
 public:
-	void alocar(Processo * p);
+	bool alocar(Processo * p);
 	void desalocar(Processo * p);
 	void reagrupar();
 
@@ -65,9 +65,9 @@ public:
 		out << "\nFragmentação interna total: " << fragmentacaoInternaTotal << " kb\n";
 
 		if(memoriaOcupada != 0)
-			out << "\nTaxa de desperdício da memória: " << (memoriaOcupada - memoriaEfetivamenteUsada)/memoriaOcupada*100 << " %\n";
+			out << "Taxa de uso da memória: " << 100 -(memoriaOcupada - memoriaEfetivamenteUsada)/memoriaOcupada*100 << " %\n";
 		else
-			out << "\nTaxa de desperdício da memória: 0 %\n";
+			out << "Taxa de uso da memória: 0 %\n";
 		return out;
 	}
 };
